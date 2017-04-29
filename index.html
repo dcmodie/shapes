@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Canvas Drag and Drop Test</title>
+	<link rel="stylesheet" type="text/css" href="css/canvas.css">
+</head>
+<body>
+<section>
+
+<div id='canvas-container'>
+<canvas id="canvas" width="800" height="600">
+This text is displayed if your browser does not support HTML5 Canvas.
+</canvas>
+</div>
+
+<script type="text/javascript">
+
+var canvas;
+var ctx;
+var x = 50;
+var y = 50;
+var WIDTH = 800;
+var HEIGHT = 600;
+var dragok = false;
+
+var goalColor = "#ff4444";
+
+function goalRect(x,y,w,h) {
+ ctx.beginPath();
+ ctx.rect(x,y,w,h);
+ ctx.closePath();
+ ctx.fill();
+}
+
+function rect(x,y,w,h) {
+ ctx.beginPath();
+ ctx.rect(x,y,w,h);
+ ctx.closePath();
+ ctx.fill();
+}
+
+function clear() {
+ ctx.clearRect(0, 0, WIDTH, HEIGHT);
+}
+
+function init() {
+ canvas = document.getElementById("canvas");
+ ctx = canvas.getContext("2d");
+ return setInterval(draw, 10);
+}
+
+function draw() {
+ clear();
+ ctx.fillStyle = "#FAF7F8";
+ rect(0,0,WIDTH,HEIGHT);
+
+ //goal
+ ctx.fillStyle = goalColor;
+ rect(650, 450, 120, 120);
+
+ //peice
+ ctx.fillStyle = '#4444ff';
+ rect(x - 50, y - 50, 100, 100);
+
+}
+
+function myMove(e){
+ if (dragok){
+  x = e.pageX - canvas.offsetLeft;
+  y = e.pageY - canvas.offsetTop;
+ }
+ console.log ('x ' +x)
+ console.log ('y ' +y)
+ if ((x>701) && (x<720) && (y>501) && (y<520) ){
+ 	goalColor = "#44ff44";
+ }
+ else{
+ 	goalColor = "#ff4444";
+ }
+
+}
+
+function myDown(e){
+ if (e.pageX < x + 50 + canvas.offsetLeft && e.pageX > x - 50 +
+ canvas.offsetLeft && e.pageY < y + 50 + canvas.offsetTop &&
+ e.pageY > y -50 + canvas.offsetTop){
+  x = e.pageX - canvas.offsetLeft;
+  y = e.pageY - canvas.offsetTop;
+  dragok = true;
+  canvas.onmousemove = myMove;
+ }
+}
+
+function myUp(){
+ dragok = false;
+ canvas.onmousemove = null;
+}
+
+init();
+canvas.onmousedown = myDown;
+canvas.onmouseup = myUp;
+
+</script>
+
+</section>
+</body>
+</html>
